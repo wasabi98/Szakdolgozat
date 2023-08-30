@@ -248,6 +248,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerSpeed: 5
   rb: {fileID: 1100353525}
+  dashPower: 20
+  dashTime: 0.2
+  dashCooldown: 0.5
 --- !u!50 &1100353525
 Rigidbody2D:
   serializedVersion: 4

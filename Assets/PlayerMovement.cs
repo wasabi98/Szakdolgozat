@@ -5,11 +5,17 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public float playerSpeed;
-    public float dashSpeed;
+    
     public Rigidbody2D rb;
 
     private Vector2 moveDirection;
-    private bool doDash = false;
+    
+    private bool canDash = true;
+    private bool isDashing;
+    public float dashPower;
+    public float dashTime;
+    public float dashCooldown;
+    
     
     void Update()
     {
@@ -21,31 +27,48 @@ public class PlayerMovement : MonoBehaviour
     }
     void ProcessInputs()
     {
+        if (isDashing)
+        {
+            return;
+        }
         float moveX = Input.GetAxisRaw("Horizontal");
         float moveY = Input.GetAxisRaw("Vertical");
-
+       
         moveDirection = new Vector2(moveX, moveY).normalized;
-
-        bool canDash = true;
-
-        if(canDash && Input.GetMouseButtonDown(1))
+        
+        if(Input.GetMouseButtonDown(1) && canDash)
         {
-            doDash = true;
-            canDash = false;
+            StartCoroutine(DashCoroutine(moveDirection));
         }
-        if(Input.GetMouseButtonUp(1))
-        {
-            canDash = true;
-        }
+
+       
+
+        
     }
+
+    IEnumerator DashCoroutine(Vector2 direction)
+    {
+        canDash = false;
+        isDashing = true;
+        
+
+        rb.velocity = direction * dashPower;
+        
+
+        yield return new WaitForSeconds(dashTime);
+
+        isDashing = false;
+
+        yield return new WaitForSeconds(dashCooldown);  
+
+        canDash = true;
+    }
+
     void Move()
     {
-
-        rb.velocity = moveDirection * playerSpeed;
-        if (doDash)
+        if (!isDashing)
         {
-            rb.velocity *= dashSpeed;
-            doDash = false;  
+            rb.velocity = moveDirection * playerSpeed;
         }
     }
 }
