@@ -6,36 +6,29 @@ using UnityEngine;
 using System.Linq;
 using UnityEngine.UIElements;
 
-public class RandomWalkGenerator  : MonoBehaviour 
+public class RandomWalkGenerator : AbstractDungeonGenerator
 {
-    [SerializeField]
-    protected Vector2Int startPosition = Vector2Int.zero;
 
     [SerializeField]
-    private int iterations = 10;
-    [SerializeField]
-    public int walkLength = 10;
-    [SerializeField]
-    public bool randomEachTime = true;
+    protected RandomWalkData randomWalkParameters;
 
-    public void RunProceduralGeneration()
+    protected override void RunProceduralGeneration()
     {
-        HashSet<Vector2Int> floorPositions = RunRandomWalk();
-        foreach (var position in floorPositions) 
-        {
-            Debug.Log(position);
-        }
+        HashSet<Vector2Int> floorPositions = RunRandomWalk(randomWalkParameters, startPosition);
+        tilemapVisualizer.Clear();
+        tilemapVisualizer.PaintFloorTiles(floorPositions);
+        WallGenerator.CreateWalls(floorPositions, tilemapVisualizer);
     }
 
-    protected HashSet<Vector2Int> RunRandomWalk()
+    protected HashSet<Vector2Int> RunRandomWalk(RandomWalkData parameters, Vector2Int position)
     {
-        var currentPosition = startPosition;
+        var currentPosition = position;
         HashSet<Vector2Int> floorPositions = new HashSet<Vector2Int>();
-        for (int i = 0; i < iterations; i++) 
+        for (int i = 0; i < parameters.iterations; i++) 
         {
-            var path = ProceduralGenerationAlgorithms.RandomWalk(currentPosition, walkLength);
+            var path = ProceduralGenerationAlgorithms.RandomWalk(currentPosition, parameters.walkLength);
             floorPositions.UnionWith(path);
-            if(randomEachTime)
+            if(parameters.startRandomlyEachIteration)
             {
                 currentPosition = floorPositions.ElementAt(UnityEngine.Random.Range(0, floorPositions.Count));
             }
@@ -43,4 +36,6 @@ public class RandomWalkGenerator  : MonoBehaviour
         }
         return floorPositions;
     }
+
+	
 }
