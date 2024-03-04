@@ -2,19 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMovement : CharacterBody
 {
-    public float playerSpeed;
     
-    public Rigidbody2D rb;
-
     private PlayerState playerMovementState =  new MoveState();
 
-    public Vector2 moveDirection;
-    
-    public bool canDash = true;
-    public float dashPower;
-    public float dashTime;
+    [SerializeField]
+    public Camera cam;
+	
+
+	[HideInInspector]
+	public bool canDash = true;
+	[SerializeField]
+	public float dashPower;
+	[SerializeField]
+	public float dashTime;
+    [SerializeField]
     public float dashCooldown;
     
     
@@ -32,6 +35,7 @@ public class PlayerMovement : MonoBehaviour
     void FixedUpdate()
     {
         playerMovementState.FixedUpdate(this);
+        
     }
    
     public void Dash()
