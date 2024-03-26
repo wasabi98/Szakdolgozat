@@ -11,11 +11,11 @@ public class EnemyBehaviour : CharacterBody
     public float shootingCooldown = 0.7f;
     private bool tempShootingBool = true;
 
-    // Update is called once per frame
+    
     void Update()
     {
-        
-    }
+		Pathfinder.HighlightPath(transform, target);
+	}
 	private void FixedUpdate()
 	{
 		GetComponent<Shooting>().RotateFiringPoint(this, target.position);
@@ -23,6 +23,7 @@ public class EnemyBehaviour : CharacterBody
 		{
 			StartCoroutine(ShootingCoroutine());
 		}
+		
 	}
 	IEnumerator ShootingCoroutine()
     {
