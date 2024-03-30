@@ -3,14 +3,14 @@ using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
 
-[CustomEditor(typeof(Network))]
+[CustomEditor(typeof(NetworkPost))]
 public class NetworkEditor : Editor
 {
-	Network network;
+	NetworkPost network;
 
 	public void Awake()
 	{
-		network = (Network)target;
+		network = (NetworkPost)target;
 	}
 	public override void OnInspectorGUI()
 	{
