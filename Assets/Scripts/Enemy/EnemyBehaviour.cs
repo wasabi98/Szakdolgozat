@@ -10,11 +10,23 @@ public class EnemyBehaviour : CharacterBody
     [SerializeField]
     public float shootingCooldown = 0.7f;
     private bool tempShootingBool = true;
-
-    
-    void Update()
+	
+	private void Start()
+	{
+		InvokeRepeating("Highlight", 2.0f, 0.5f);
+		//StartCoroutine(Pathfinder.HighlightPath(transform, target));
+	}
+	private void Highlight()
+	{
+		if(Vector3.Distance(transform.position, target.position) < 18.0f)
+		{
+			StartCoroutine(Pathfinder.HighlightPath(transform, target));
+		}
+	}
+			
+	void Update()
     {
-		Pathfinder.HighlightPath(transform, target);
+		//Pathfinder.HighlightPath(transform, target);
 	}
 	private void FixedUpdate()
 	{
