@@ -20,7 +20,7 @@ public class MoveState : PlayerState
         {
             return new DashState();
         }
-		if (Input.GetButtonDown("Fire1"))
+        if (Input.GetButtonDown("Fire1"))
 		{
 			sender.GetComponent<Shooting>().Shoot();
 		}
