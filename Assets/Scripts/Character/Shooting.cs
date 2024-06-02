@@ -7,7 +7,7 @@ public class Shooting : MonoBehaviour
     public Transform firePoint;
     public GameObject bulletPrefab;
 
-    public float bulletForce = 20f;
+    public float bulletForce = 15f;
 
     
     public void Shoot()
@@ -20,6 +20,6 @@ public class Shooting : MonoBehaviour
     {
 		Vector2 lookDir = target - sender.rb.position;
 		float angle = Mathf.Atan2(lookDir.y, lookDir.x) * Mathf.Rad2Deg - 90f;
-		sender.firePoint.rotation = Quaternion.Euler(0, 0, angle);
+		sender.fireAxis.rotation = Quaternion.Euler(0, 0, angle);
 	}
 }

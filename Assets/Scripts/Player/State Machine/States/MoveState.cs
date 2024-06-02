@@ -22,6 +22,7 @@ public class MoveState : PlayerState
         }
         if (Input.GetButtonDown("Fire1"))
 		{
+            
 			sender.GetComponent<Shooting>().Shoot();
 		}
 		return null;

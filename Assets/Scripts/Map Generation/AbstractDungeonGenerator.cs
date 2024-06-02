@@ -11,6 +11,9 @@ public abstract class AbstractDungeonGenerator : MonoBehaviour
 
     public void GenerateDungeon()
     {
+        Manager manager = GameObject.Find("Manager").GetComponent<Manager>();
+		manager.ClearEnemies();
+        manager.SetPlayerPosition(startPosition);
         tilemapVisualizer.Clear();
         RunProceduralGeneration();
     }

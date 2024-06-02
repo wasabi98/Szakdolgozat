@@ -65,12 +65,26 @@ public class Pathfinder : MonoBehaviour
 
 
 				yield return new WaitForSeconds(0.5f);
-
 			}
-		
-		
-		
+	}
+	public static List<Vector3> GetPath(Transform from, Transform to)
+	{
+		List<Vector3> listWorld = new List<Vector3>();
+		Vector3 fromPoz = from.position;
+		Vector3 toPoz = to.position;
+		Vector3 offset = new Vector3(0.5f, 0.5f, 0);
 
+		Vector3Int cellPoz = grid.GetComponent<Grid>().WorldToCell(fromPoz);
+		Vector3Int cellPoz2 = grid.GetComponent<Grid>().WorldToCell(toPoz);
+
+		List<Vector3Int> list = Pathfind(cellPoz, cellPoz2);
+
+		foreach(var item in list)
+		{
+			listWorld.Add(grid.GetComponent<Grid>().CellToWorld(item) + offset);
+		}
+
+		return listWorld;
 	}
 	public static List<Vector3Int> Pathfind(Vector3Int from, Vector3Int to)
 	{
@@ -107,7 +121,7 @@ public class Pathfinder : MonoBehaviour
 				}
 				p2.End();
 				open.Remove(pos);
-				DrawRect(pos, Color.yellow);
+				//DrawRect(pos, Color.yellow);
 
 				//ha a legkisebb a cél akkor return
 
@@ -121,7 +135,7 @@ public class Pathfinder : MonoBehaviour
 						iterator = iterator.parent;
 					}
 					path.Reverse();
-					Debug.Log(iterations);
+					//Debug.Log(iterations);
 					return path;
 				}
 				p3.Begin();
@@ -155,107 +169,7 @@ public class Pathfinder : MonoBehaviour
 
 
 	}
-	/*public static List<Vector3Int> Pathfind_(Vector3Int from, Vector3Int to)
-	{
-		using(p.Auto())
-		{
-			int asd = 0;
-			foreach (var poz in tilemap.cellBounds.allPositionsWithin)
-			{
-				if (tilemap.HasTile(poz))
-				{
-					asd++;
-				}
-			}
-			Debug.Log(asd);
-
-			List<Vector3Int> path = new();
-		Node fromNode = new(from, g: 0.0f, h: Distance(from, to));
-		HashSet<Node> open = new() { fromNode };
-		HashSet<Node> closed = new();
-		
-		if (tilemap == null || grid == null)
-		{
-			return path;
-		}
-
-		
-		while (open.Count > 0 )
-		{
-			
-			Node min = null;
-			foreach (Node node in open)
-			{
-				if (min == null)
-				{
-					min = node;
-					continue;
-				}
-				if (node.f < min.f)
-				{
-					min = node;
-				}
-				if (Math.Abs(node.f - min.f) < 0.001)
-				{
-					if(node.h < min.h)
-					min = node;
-				}
-
-				
-			}
-			open.Remove(min);
-			closed.Add(min);
-			//DrawRect(min.pos, Color.yellow);
-
-			if (min.pos == to)
-			{
-				Node iterator = min;
-				while (iterator != null)
-				{
-					path.Add(iterator.pos);
-					iterator = iterator.parent;
-				}
-				path.Reverse();
-
-				return path;
-			}
-			List<Vector3Int> neighbours = GetNeighbours(min.pos);
-			foreach (var tile in neighbours)
-			{
-				Node node = new Node(tile, min, min.g + Distance(min.pos, tile), Distance(tile, to));
-				bool cont = false;
-				foreach (Node existing in closed)
-				{
-					if (existing.pos == node.pos && existing.f < node.f)
-					{
-						cont = true;
-						closed.Remove(existing);
-						open.Add(node);
-
-						break;
-					}			
-				}
-				foreach (Node existing in open)
-				{
-					
-					if (existing.pos == node.pos && existing.g < node.g)
-					{
-						cont = true;
-						existing.Copy(node);
-						break;
-					}		
-				}
-				if (cont)
-				{
-					continue;
-				}
-					
-				open.Add(node);
-			}
-		}
-		return null;
-		}
-	}*/
+	
 	private static float Distance(Vector3Int from, Vector3Int to)
 	{
 		float distance = 0.0f;
@@ -281,10 +195,12 @@ public class Pathfinder : MonoBehaviour
 	}
 	public static void ClearLog()
 	{
+#if UNITY_EDITOR
 		var assembly = Assembly.GetAssembly(typeof(UnityEditor.Editor));
 		var type = assembly.GetType("UnityEditor.LogEntries");
 		var method = type.GetMethod("Clear");
 		method.Invoke(new object(), null);
+#endif
 	}
 	public static List<Vector3Int> GetNeighbours(Vector3Int tile)
 	{

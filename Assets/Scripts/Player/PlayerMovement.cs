@@ -20,8 +20,17 @@ public class PlayerMovement : CharacterBody
     [SerializeField]
     public float dashCooldown;
     
+
     
-    void Update()
+
+    private Manager manager;
+	private void Start()
+	{
+        manager = GameObject.Find("Manager").GetComponent<Manager>();
+		manager.SetHealth(health);
+		animator = GetComponent<Animator>();
+	}
+	void Update()
     {
         PlayerState state = playerMovementState.ProcessInput(this);
         if(state != null)
@@ -30,13 +39,26 @@ public class PlayerMovement : CharacterBody
             playerMovementState = state;
             playerMovementState.Enter(this);
         }    
-        
+       
     }
     void FixedUpdate()
     {
-        playerMovementState.FixedUpdate(this);
         
-    }
+        playerMovementState.FixedUpdate(this);
+		if (moveDirection != Vector2.zero)
+		{
+
+			animator.Play("walk");
+			animator.SetFloat("xMove", moveDirection.x);
+			animator.SetFloat("yMove", moveDirection.y);
+		}
+		else
+		{
+			animator.Play("idle");
+		}
+
+	}
+
    
     public void Dash()
     {
@@ -59,5 +81,13 @@ public class PlayerMovement : CharacterBody
         canDash = true;
     }
 
-    
+	public override void Damage(int damage)
+	{
+        health -= damage;
+        manager.UpdateHealth(health);
+        if(health <= 0)
+        {
+            manager.GameOver();
+        }
+	}
 }
